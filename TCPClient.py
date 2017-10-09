@@ -13,17 +13,20 @@ sock.connect(server_address)
 # method below is after the connection established
 
 try:
-	message = input("Enter message...")
+	message = input(">> ")
 	message = message + "\n"
 	sock.send(message.encode())
 
 	# Look resposne
 	amount_received = 0
 	amount_expected = len(message.encode())
+	result = ""
 	while amount_received < amount_expected:
 		data = sock.recv(16)
 		amount_received += len(data)
-		print ('received %s' % data)
+		result += data.decode('utf-8')
+
+	print ('received %s' % result)
 
 finally:
 	print('closing socket')

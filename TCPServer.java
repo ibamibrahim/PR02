@@ -6,30 +6,28 @@ class TCPServer {
         String clientSentence;
         String capitalizedSentence;
         ServerSocket welcomeSocket = new ServerSocket(6789);
+        Socket clientSocket;
 
         while (true) {
             System.out.println("Waiting for connection....");
-            Socket connectionSocket = welcomeSocket.accept();
+            clientSocket = welcomeSocket.accept();
 
-
-            String ipAddress = connectionSocket.getInetAddress().toString().substring(1);
-            int port = connectionSocket.getPort();
+            String ipAddress = clientSocket.getInetAddress().toString().substring(1);
+            int port = clientSocket.getPort();
 
             System.out.printf("New client conected from ip %s port %d %n", ipAddress, port);
             
-            BufferedReader inFromClient =
-                new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
-            System.out.println("sampe sini_1");
+            BufferedReader in =
+                new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 
-            DataOutputStream outToClient = new DataOutputStream(connectionSocket.getOutputStream());
-            System.out.println("sampe sini_2");
+            DataOutputStream out = new DataOutputStream(clientSocket.getOutputStream());
             
-            clientSentence = inFromClient.readLine();
-            System.out.println("sampe sini_3");
+            clientSentence = in.readLine();
 
             System.out.println("Received: " + clientSentence);
             capitalizedSentence = clientSentence.toUpperCase() + '\n';
-            outToClient.writeBytes(capitalizedSentence);
+            out.writeBytes(capitalizedSentence);
+        
         }
     }
 }
