@@ -38,17 +38,24 @@ def recv_timeout(the_socket,timeout=2):
 
 host = input("Enter host to connect: ")    
 port = input("Enter port to connect: ")                   # The same port as used by the server
-print("connecting to address %s port %d" % (host, int(port)))
+print("Connecting to IP %s Port %d..." % (host, int(port)))
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.connect((host, int(port)))
-message = input(">> ")
-message += "\n"
-s.send(message.encode())
+try:
+	s.connect((host, int(port)))
+	print("Connected! \n")
+	message = input(">> ")
 
-# function recv_timeout taken from 
-# http://www.binarytides.com/receive-full-data-with-the-recv-socket-function-in-python/
+	message += "\n"
+	s.send(message.encode())
+
+	# function recv_timeout taken from 
+	# http://www.binarytides.com/receive-full-data-with-the-recv-socket-function-in-python/
 
 
-print (recv_timeout(s))
-s.close()
+	print (recv_timeout(s))
+
+	if(message.partition(' ')[0] == "LOGIN"):
+		s.close()
+except ConnectionRefusedError:
+	print("The server is off; Turn on the server first!")
