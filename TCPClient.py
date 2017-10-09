@@ -1,5 +1,6 @@
 import socket
 import sys
+import struct
 
 # Create TCP/IP socket
 
@@ -18,16 +19,17 @@ try:
 	sock.send(message.encode())
 
 	# Look resposne
-	amount_received = 0
-	amount_expected = len(message.encode())
-	result = ""
-	while amount_received < amount_expected:
-		data = sock.recv(16)
-		amount_received += len(data)
-		result += data.decode('utf-8')
+	text = ''
+	chunk = b''
+	while True:
+   		chunk += sock.recv(16)
+   		if not chunk:
+   			break
+   		else:
+   			text += chunk.decode()
 
-	print ('received %s' % result)
-
+	print (text)
+	
 finally:
 	print('closing socket')
-	sock.close()
+	#sock.close()
